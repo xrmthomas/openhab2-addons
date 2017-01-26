@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-description:config-descriptions
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:config-description="http://eclipse.org/smarthome/schemas/config-description/v1.0.0"
+    xsi:schemaLocation="http://eclipse.org/smarthome/schemas/config-description/v1.0.0
+        http://eclipse.org/smarthome/schemas/config-description-1.0.0.xsd">
+
+    <config-description uri="thing-type:xpl:bridge">                         
+        <parameter name="instance" type="text">
+            <label>Instance</label>
+            <description>Instance name of the xPL Server</description>
+            <required>true</required>
+            <default>openhab</default>
+            <advanced>false</advanced>
+        </parameter>
+        
+        <parameter name="startHub" type="boolean" required="true">
+            <label>Start Hub</label>
+            <description>Launch an embedded xPL Hub</description>
+            <default>false</default>
+        </parameter>                                                   
+    
+        <parameter name="bindTo" type="text">
+            <label>Bind Address</label>
+            <description>Network address to bind to, leave empty to bind to all</description>
+            <required>false</required>
+            <advanced>true</advanced>
+        </parameter>
+    </config-description>
+    
+    <config-description uri="thing-type:xpl:device">                         
+        <parameter name="idString1" type="text">
+            <label>Identifier 1</label>
+            <description>First string identifying the device in the xPL message body</description>
+            <required>true</required>
+            <advanced>false</advanced>
+        </parameter>
+
+        <parameter name="idString2" type="text">
+            <label>Identifier 2</label>
+            <description>Second string identifying the device in the xPL message body</description>
+            <required>false</required>
+            <advanced>false</advanced>
+        </parameter>
+
+    </config-description>
+    
+</config-description:config-descriptions>

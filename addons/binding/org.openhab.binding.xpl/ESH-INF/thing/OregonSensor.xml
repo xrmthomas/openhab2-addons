@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="xpl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+
+	<thing-type id="oregonsensor">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="xplbridge" />
+        </supported-bridge-type-refs>
+
+		<label>Temperature-Humidity Sensor</label>
+		<description>A Temperature-Humidity device.</description>
+
+		<channels>
+			<channel id="temp" typeId="temperature" />
+			<channel id="humidity" typeId="humidity" />
+			<channel id="status" typeId="humiditystatus" />
+            <channel id="energy" typeId="totalusage" />
+            <channel id="power" typeId="instantpower" />
+            <channel id="instantAmp" typeId="instantamp" />
+			<channel id="battery" typeId="system.battery-level" />
+			<channel id="lowBattery" typeId="system.low-battery" />
+			<channel id="lastMessage" typeId="lastMessage" />
+		</channels>
+		
+        <properties>
+             <property name="idString1">device</property>
+             <property name="schema">sensor.basic</property>
+             <property name="lowBatteryLevel">10</property>
+        </properties>  
+
+		<config-description>
+			<parameter name="type" type="text" required="true">
+				<label>Sensor Type</label>
+				<description>Sensor Type (temp1, temp2, temp3...elec2)</description>
+			</parameter>
+			
+            <parameter name="id" type="text" required="true">
+                <label>Sensor Id</label>
+                <description>Sensor Id : 0x + hex sensor id</description>
+            </parameter>
+		</config-description>
+
+	</thing-type>
+
+</thing:thing-descriptions>
