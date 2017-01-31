@@ -9,6 +9,8 @@ package org.openhab.binding.xpl.handler;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.cdp1802.xpl.xPL_IdentifierI;
 import org.cdp1802.xpl.xPL_Manager;
@@ -17,16 +19,16 @@ import org.cdp1802.xpl.xPL_MessageI;
 import org.cdp1802.xpl.xPL_MessageListenerI;
 import org.cdp1802.xpl.xPL_MutableMessageI;
 import org.cdp1802.xpl.ethernet.EthernetHandler;
+import org.eclipse.smarthome.config.core.Configuration;
+import org.eclipse.smarthome.config.core.status.ConfigStatusMessage;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
-import org.eclipse.smarthome.core.thing.ThingStatusDetail;
-import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
+import org.eclipse.smarthome.core.thing.binding.ConfigStatusBridgeHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.xpl.XplBindingConstants;
-import org.openhab.binding.xpl.config.XplBridgeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,13 +38,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author Gaël L'hopital - Initial contribution
  */
-public class XplBridgeHandler extends BaseBridgeHandler implements xPL_MessageListenerI {
+public class XplBridgeHandler extends ConfigStatusBridgeHandler implements xPL_MessageListenerI {
+
+    private static final String BINDTO_PARAM = "bindTo";
+    private static final String STARTHUB_PARAM = "startHub";
 
     private Logger logger = LoggerFactory.getLogger(XplBridgeHandler.class);
 
     private static xPL_IdentifierI sourceIdentifier = null;
     private static final xPL_Manager theManager = xPL_Manager.getManager();
-    private XplBridgeConfiguration configuration;
+    // private XplBridgeConfiguration configuration;
+
+    private Boolean startHub;
+    private String instance;
+    private String bindTo;
 
     public XplBridgeHandler(Bridge bridge) {
         super(bridge);
@@ -56,25 +65,34 @@ public class XplBridgeHandler extends BaseBridgeHandler implements xPL_MessageLi
     @Override
     public void initialize() {
 
-        configuration = getConfigAs(XplBridgeConfiguration.class);
+        Configuration config = getThing().getConfiguration();
 
-        EthernetHandler ethernetHandler = new EthernetHandler();
-        try {
-            ethernetHandler.setNetworkInterface(
-                    configuration.bindTo == null ? null : InetAddress.getByName(configuration.bindTo));
-            ethernetHandler.setConnectMode(configuration.startHub ? EthernetHandler.ConnectMode.STANDALONE
-                    : EthernetHandler.ConnectMode.VIA_HUB);
-            ethernetHandler.startHandler();
-            theManager.addMediaHandler(ethernetHandler);
-            setInstance(configuration.instance);
-            theManager.addMessageListener(this);
-            updateStatus(ThingStatus.ONLINE);
-        } catch (UnknownHostException e) {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                    "Invalid or malformed BindTo address");
-        } catch (xPL_MediaHandlerException e) {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
-        }
+        startHub = (Boolean) config.get(STARTHUB_PARAM);
+        instance = (String) config.get("instance");
+        bindTo = (String) config.get(BINDTO_PARAM);
+
+        setInstance(instance);
+        theManager.addMessageListener(this);
+        updateStatus(ThingStatus.ONLINE);
+        // configuration = getConfigAs(XplBridgeConfiguration.class);
+
+        // EthernetHandler ethernetHandler = new EthernetHandler();
+        // try {
+        // ethernetHandler.setNetworkInterface(
+        // configuration.bindTo == null ? null : InetAddress.getByName(configuration.bindTo));
+        // ethernetHandler.setConnectMode(configuration.startHub ? EthernetHandler.ConnectMode.STANDALONE
+        // : EthernetHandler.ConnectMode.VIA_HUB);
+        // ethernetHandler.startHandler();
+        // theManager.addMediaHandler(ethernetHandler);
+        // setInstance(configuration.instance);
+        // theManager.addMessageListener(this);
+        // updateStatus(ThingStatus.ONLINE);
+        // } catch (UnknownHostException e) {
+        // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+        // "Invalid or malformed BindTo address");
+        // } catch (xPL_MediaHandlerException e) {
+        // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
+        // }
     }
 
     @Override
@@ -118,12 +136,34 @@ public class XplBridgeHandler extends BaseBridgeHandler implements xPL_MessageLi
         logger.debug(theMessage.toString());
         for (Thing thing : getThing().getThings()) {
             ThingHandler thingHandler = thing.getHandler();
-            XplDeviceHandler deviceHandler = (XplDeviceHandler) thingHandler;
+            XplDeviceHandler<?> deviceHandler = (XplDeviceHandler<?>) thingHandler;
 
             if (deviceHandler.targetedBy(theMessage)) {
                 deviceHandler.handeXPLMessage(theMessage.getType(),
                         theMessage.getSchemaClass() + "." + theMessage.getSchemaType(), theMessage.getMessageBody());
             }
         }
+    }
+
+    @Override
+    public Collection<ConfigStatusMessage> getConfigStatus() {
+        Collection<ConfigStatusMessage> configStatus = new ArrayList<>();
+
+        EthernetHandler ethernetHandler = new EthernetHandler();
+        try {
+            ethernetHandler.setNetworkInterface(bindTo == null ? null : InetAddress.getByName(bindTo));
+            ethernetHandler.setConnectMode(
+                    startHub ? EthernetHandler.ConnectMode.STANDALONE : EthernetHandler.ConnectMode.VIA_HUB);
+            ethernetHandler.startHandler();
+            theManager.addMediaHandler(ethernetHandler);
+        } catch (UnknownHostException e) {
+            configStatus.add(ConfigStatusMessage.Builder.error(BINDTO_PARAM)
+                    .withMessageKeySuffix("Invalid or malformed BindTo address").withArguments(bindTo).build());
+        } catch (xPL_MediaHandlerException e) {
+            configStatus.add(ConfigStatusMessage.Builder.error(STARTHUB_PARAM).withMessageKeySuffix(e.getMessage())
+                    .withArguments(startHub).build());
+        }
+
+        return configStatus;
     }
 }
