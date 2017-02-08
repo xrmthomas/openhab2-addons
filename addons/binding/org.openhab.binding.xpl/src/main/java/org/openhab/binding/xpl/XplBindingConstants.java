@@ -29,8 +29,9 @@ public class XplBindingConstants {
     public final static ThingTypeUID BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "xplbridge");
     public final static ThingTypeUID DEVICE_THING_TYPE = new ThingTypeUID(BINDING_ID, "xpldevice");
 
-    public final static ThingTypeUID THING_TYPE_X10LIGHTING = new ThingTypeUID(BINDING_ID, "X10Lighting");
-    public final static ThingTypeUID THING_TYPE_ACLIGHTING = new ThingTypeUID(BINDING_ID, "ACLighting");
+    public final static ThingTypeUID THING_TYPE_X10_LIGHTING = new ThingTypeUID(BINDING_ID, "X10Appliance");
+    public final static ThingTypeUID THING_TYPE_AC_DIMMER = new ThingTypeUID(BINDING_ID, "ACDimmer");
+    public final static ThingTypeUID THING_TYPE_AC_APPLIANCE = new ThingTypeUID(BINDING_ID, "ACAppliance");
     public final static ThingTypeUID THING_TYPE_OREGON_SENSOR = new ThingTypeUID(BINDING_ID, "oregonsensor");
 
     // List of all Channel ids
@@ -48,5 +49,6 @@ public class XplBindingConstants {
 
     // List of all adressable things in OH
     public final static Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = ImmutableSet.of(BRIDGE_THING_TYPE,
-            DEVICE_THING_TYPE, THING_TYPE_OREGON_SENSOR, THING_TYPE_X10LIGHTING, THING_TYPE_ACLIGHTING);
+            DEVICE_THING_TYPE, THING_TYPE_OREGON_SENSOR, THING_TYPE_X10_LIGHTING, THING_TYPE_AC_DIMMER,
+            THING_TYPE_AC_APPLIANCE);
 }

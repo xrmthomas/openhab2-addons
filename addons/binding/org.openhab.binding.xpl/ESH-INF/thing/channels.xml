@@ -81,6 +81,12 @@
         <label>Last Message</label>
         <description>Last Message emitted by the module</description>
         <state readOnly="true"/>
+    </channel-type>
+    
+    <channel-type id="shutter">
+        <item-type>Rollershutter</item-type>
+        <label>Shutter</label>
+        <description>Shutter channel</description>
     </channel-type>  
 
 </thing:thing-descriptions>

@@ -38,8 +38,10 @@ public class OregonDeviceHandler extends XplDeviceHandler<OregonDeviceConfigurat
         if (device != null) {
             result = device.equalsIgnoreCase(deviceId);
             result = result
+                    // à verifier, il me semble que la classe abstraite parente gère déja le contrôle du matching sur la
+                    // classe de message
                     && xplSchema.equalsIgnoreCase(theMessage.getSchemaClass() + "." + theMessage.getSchemaType());
-            result = result && theMessage.getType() == MessageType.STATUS;
+            result = result && theMessage.getType() == MessageType.TRIGGER;
         }
 
         return result;

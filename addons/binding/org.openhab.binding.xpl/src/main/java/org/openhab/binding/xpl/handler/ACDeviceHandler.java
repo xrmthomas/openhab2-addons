@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-2016 by the respective copyright holders.
+ * Copyright (c) 204-2016 by the respective copyright holders.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@ import static org.openhab.binding.xpl.XplBindingConstants.*;
 
 import org.cdp1802.xpl.NamedValuesI;
 import org.cdp1802.xpl.xPL_MessageI;
-import org.cdp1802.xpl.xPL_MessageI.MessageType;
 import org.cdp1802.xpl.xPL_MutableMessageI;
 import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.library.types.PercentType;
@@ -39,19 +38,20 @@ public class ACDeviceHandler extends XplDeviceHandler<ACDeviceConfiguration> {
     protected boolean targetedBy(xPL_MessageI theMessage) {
         boolean result = false;
         String address = theMessage.getNamedValue(addressKey);
-        if (address != null) {
-            String unit = theMessage.getNamedValue(unitKey);
-            if (unit != null) {
-                for (int i = 0; i < 6 && !result; i++) {
-                    result = address.equalsIgnoreCase(configuration.getAddresses()[i]);
-                    result = result && unit.equalsIgnoreCase(configuration.getUnits()[i]);
-                }
-                result = result
-                        && xplSchema.equalsIgnoreCase(theMessage.getSchemaClass() + "." + theMessage.getSchemaType());
-                result = result && theMessage.getType() != MessageType.COMMAND;
-            }
-        }
+        String unit = theMessage.getNamedValue(unitKey);
+        result = xplSchema.equalsIgnoreCase(theMessage.getSchemaClass() + "." + theMessage.getSchemaType());
+        result = result && adressMatches(address, unit);
 
+        return result;
+    }
+
+    private boolean adressMatches(String address, String unit) {
+        boolean result = false;
+
+        if (unit != null) {
+            Integer requestedUnit = configuration.getAddresses().get(address);
+            result = (requestedUnit != null) && (requestedUnit.intValue() == Integer.parseInt(unit));
+        }
         return result;
     }
 
@@ -60,31 +60,60 @@ public class ACDeviceHandler extends XplDeviceHandler<ACDeviceConfiguration> {
         switch (channelId) {
             case CHANNEL_COMMAND:
                 message.addNamedValue(channelId, command.toString().toLowerCase());
-                updateState(CHANNEL_LEVEL, command == OnOffType.ON ? PercentType.HUNDRED : PercentType.ZERO);
+                if (getThing().getChannel(CHANNEL_LEVEL) != null) {
+                    updateState(CHANNEL_LEVEL, command == OnOffType.ON ? PercentType.HUNDRED : PercentType.ZERO);
+                }
                 break;
             case CHANNEL_LEVEL:
                 int valeur = Integer.parseInt(command.toString());
-                valeur = Math.round(valeur / 6);
+                valeur = (int) Math.round(valeur / 6.67);
                 valeur = Math.max(0, valeur);
                 valeur = Math.min(15, valeur);
 
-                message.addNamedValue("command", "preset");
+                message.addNamedValue(CHANNEL_COMMAND, "preset");
                 message.addNamedValue(CHANNEL_LEVEL, valeur);
-                updateState(CHANNEL_COMMAND, valeur == 0 ? OnOffType.OFF : OnOffType.ON);
+                if (getThing().getChannel(CHANNEL_COMMAND) != null) {
+                    updateState(CHANNEL_COMMAND, valeur == 0 ? OnOffType.OFF : OnOffType.ON);
+                }
         }
     }
 
     @Override
     protected void internalHandleMessage(NamedValuesI messageBody) {
-        State state = messageBody.getNamedValue("command").equalsIgnoreCase("ON") ? OnOffType.ON : OnOffType.OFF;
-        updateState(CHANNEL_COMMAND, state);
+        String command = messageBody.getNamedValue(CHANNEL_COMMAND).toLowerCase();
+        State boolState = null;
+        State dimState = null;
+        switch (command) {
+            case "on":
+                boolState = OnOffType.ON;
+                dimState = PercentType.HUNDRED;
+                break;
+            case "off":
+                boolState = OnOffType.OFF;
+                dimState = PercentType.ZERO;
+                break;
+            case "preset":
+                int value = Integer.parseInt(messageBody.getNamedValue(CHANNEL_LEVEL));
+                boolState = value == 0 ? OnOffType.OFF : OnOffType.ON;
+                value = (int) (value * 6.67);
+                value = Math.min(value, 100);
+                dimState = new PercentType(value);
+        }
+
+        if (dimState != null && getThing().getChannel(CHANNEL_LEVEL) != null) {
+            updateState(CHANNEL_LEVEL, dimState);
+        }
+
+        if (boolState != null && getThing().getChannel(CHANNEL_COMMAND) != null) {
+            updateState(CHANNEL_COMMAND, boolState);
+        }
+
     }
 
     @Override
     protected void addIdentifiers(xPL_MutableMessageI message) {
-        message.addNamedValue(addressKey, configuration.getAddresses()[0]);
-        message.addNamedValue(unitKey, configuration.getUnits()[0]);
-
+        message.addNamedValue(addressKey, configuration.address1);
+        message.addNamedValue(unitKey, configuration.unit1);
     }
 
 }

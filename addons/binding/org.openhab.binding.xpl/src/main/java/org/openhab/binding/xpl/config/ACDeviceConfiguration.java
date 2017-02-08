@@ -7,6 +7,9 @@
  */
 package org.openhab.binding.xpl.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The {@link ACDeviceConfiguration} is responsible for holding
  * configuration informations needed to define an xPL Device
@@ -27,31 +30,17 @@ public class ACDeviceConfiguration extends XplDeviceConfiguration {
     public String address6;
     public Integer unit6;
 
-    private String[] addresses = null;
-    private String[] units = null;
+    private Map<String, Integer> addresses = null;
 
-    public String[] getAddresses() {
+    public Map<String, Integer> getAddresses() {
         if (addresses == null) {
-            addresses = new String[6];
-            addresses[0] = address1;
-            addresses[1] = address2;
-            addresses[2] = address3;
-            addresses[3] = address4;
-            addresses[4] = address5;
-            addresses[5] = address6;
-        }
-        return addresses;
-    }
-
-    public String[] getUnits() {
-        if (units == null) {
-            units = new String[6];
-            units[0] = unit1.toString();
-            units[1] = unit2.toString();
-            units[2] = unit3.toString();
-            units[3] = unit4.toString();
-            units[4] = unit5.toString();
-            units[5] = unit6.toString();
+            addresses = new HashMap<String, Integer>();
+            addresses.put(address1, unit1);
+            addresses.put(address2, unit2);
+            addresses.put(address3, unit3);
+            addresses.put(address4, unit4);
+            addresses.put(address5, unit5);
+            addresses.put(address6, unit6);
         }
         return addresses;
     }

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="xpl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+
+	<thing-type id="ACAppliance">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="xplbridge" />
+        </supported-bridge-type-refs>
+
+		<label>AC ON/OFF Appliance</label>
+		<description>An AC ON/OFF appliance (ANSLUT, Chacon, DI.O, KlikAanKlikUit, NEXA, Proove, Intertechno, Düwi, HomeEasy UK, HomeEasy EU)</description>
+
+		<channels>
+			<channel id="command" typeId="command" />
+			<channel id="lastMessage" typeId="lastMessage" />
+		</channels>
+		
+        <properties>
+             <property name="idString1">address</property>
+             <property name="idString2">unit</property>
+             <property name="schema">ac.basic</property>
+        </properties> 
+
+		<config-description>
+			<parameter name="address1" type="text" required="true">
+				<label>Primary Address</label>
+				<description>Device address. Eg 0x03df386</description>
+			</parameter>
+            <parameter name="unit1" type="integer" min="0" max="15" required="true">
+                <label>Primary Unit</label>
+                <description>Device Unit. Eg. 10</description>
+            </parameter>
+                       
+            <parameter name="address2" type="text" required="false">
+                <label>Secondary Address</label>
+            </parameter>
+            <parameter name="unit2" type="integer" min="0" max="15" required="false">
+                <label>Secondary Unit</label>
+            </parameter>
+            
+            <parameter name="address3" type="text" required="false">
+                <label>Other Address</label>
+            </parameter>
+            <parameter name="unit3" type="integer" min="0" max="15" required="false">
+                <label>Other Unit</label>
+            </parameter>
+                      
+            <parameter name="address4" type="text" required="false">
+                <label>Other Address</label>
+            </parameter>
+            <parameter name="unit4" type="integer" min="0" max="15" required="false">
+                <label>Other Unit</label>
+            </parameter>
+            
+            <parameter name="address5" type="text" required="false">
+                <label>Other Address</label>
+            </parameter>
+            <parameter name="unit5" type="integer" min="0" max="15" required="false">
+                <label>Other Unit</label>
+            </parameter>
+            
+            <parameter name="address6" type="text" required="false">
+                <label>Other Address</label>
+            </parameter>
+            <parameter name="unit6" type="integer" min="0" max="15" required="false">
+                <label>Other Unit</label>
+            </parameter>
+            
+		</config-description>
+	</thing-type>
+	
+    <thing-type id="ACDimmer">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="xplbridge" />
+        </supported-bridge-type-refs>
+
+        <label>AC Dimmer</label>
+        <description>An AC Dimmer device (ANSLUT, Chacon, DI.O, KlikAanKlikUit, NEXA, Proove, Intertechno, Düwi, HomeEasy UK, HomeEasy EU)</description>
+
+        <channels>
+            <channel id="command" typeId="command" />
+            <channel id="level" typeId="dimminglevel" />
+            <channel id="lastMessage" typeId="lastMessage" />
+        </channels>
+        
+        <properties>
+             <property name="idString1">address</property>
+             <property name="idString2">unit</property>
+             <property name="schema">ac.basic</property>
+        </properties> 
+
+        <config-description>
+            <parameter name="address1" type="text" required="true">
+                <label>Primary Address</label>
+                <description>Device address. Eg 0x03df386</description>
+            </parameter>
+            <parameter name="unit1" type="integer" min="0" max="15" required="true">
+                <label>Primary Unit</label>
+                <description>Device Unit. Eg. 10</description>
+            </parameter>
+                       
+            <parameter name="address2" type="text" required="false">
+                <label>Secondary Address</label>
+            </parameter>
+            <parameter name="unit2" type="integer" min="0" max="15" required="false">
+                <label>Secondary Unit</label>
+            </parameter>
+            
+            <parameter name="address3" type="text" required="false">
+                <label>Other Address</label>
+            </parameter>
+            <parameter name="unit3" type="integer" min="0" max="15" required="false">
+                <label>Other Unit</label>
+            </parameter>
+                      
+            <parameter name="address4" type="text" required="false">
+                <label>Other Address</label>
+            </parameter>
+            <parameter name="unit4" type="integer" min="0" max="15" required="false">
+                <label>Other Unit</label>
+            </parameter>
+            
+            <parameter name="address5" type="text" required="false">
+                <label>Other Address</label>
+            </parameter>
+            <parameter name="unit5" type="integer" min="0" max="15" required="false">
+                <label>Other Unit</label>
+            </parameter>
+            
+            <parameter name="address6" type="text" required="false">
+                <label>Other Address</label>
+            </parameter>
+            <parameter name="unit6" type="integer" min="0" max="15" required="false">
+                <label>Other Unit</label>
+            </parameter>
+            
+        </config-description>
+    </thing-type>
+
+
+</thing:thing-descriptions>

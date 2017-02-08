@@ -8,8 +8,8 @@
             <bridge-type-ref id="xplbridge" />
         </supported-bridge-type-refs>
 
-		<label>Temperature-Humidity Sensor</label>
-		<description>A Temperature-Humidity device.</description>
+		<label>Oregon Sensor Sensor</label>
+		<description>A Temperature-Humidity/Power consumption device.</description>
 
 		<channels>
 			<channel id="temp" typeId="temperature" />
