@@ -88,5 +88,5 @@
         <label>Shutter</label>
         <description>Shutter channel</description>
     </channel-type>  
-
+    
 </thing:thing-descriptions>

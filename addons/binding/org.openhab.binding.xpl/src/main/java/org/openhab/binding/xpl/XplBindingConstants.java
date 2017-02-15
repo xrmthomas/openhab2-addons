@@ -32,6 +32,7 @@ public class XplBindingConstants {
     public final static ThingTypeUID THING_TYPE_X10_LIGHTING = new ThingTypeUID(BINDING_ID, "X10Appliance");
     public final static ThingTypeUID THING_TYPE_AC_DIMMER = new ThingTypeUID(BINDING_ID, "ACDimmer");
     public final static ThingTypeUID THING_TYPE_AC_APPLIANCE = new ThingTypeUID(BINDING_ID, "ACAppliance");
+    public final static ThingTypeUID THING_TYPE_RAW_MESSAGE = new ThingTypeUID(BINDING_ID, "RawMessage");
     public final static ThingTypeUID THING_TYPE_OREGON_SENSOR = new ThingTypeUID(BINDING_ID, "oregonsensor");
 
     // List of all Channel ids

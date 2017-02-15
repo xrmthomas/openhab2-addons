@@ -16,6 +16,7 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.openhab.binding.xpl.handler.ACDeviceHandler;
 import org.openhab.binding.xpl.handler.OregonDeviceHandler;
+import org.openhab.binding.xpl.handler.RawDeviceHandler;
 import org.openhab.binding.xpl.handler.X10DeviceHandler;
 //import org.eclipse.smarthome.model.script.engine.action.ActionService;
 //import org.openhab.binding.xpl.deactivated.XplAction;
@@ -50,6 +51,8 @@ public class XplHandlerFactory extends BaseThingHandlerFactory /* implements Act
             return new ACDeviceHandler(thing);
         } else if (thingTypeUID.equals(THING_TYPE_OREGON_SENSOR)) {
             return new OregonDeviceHandler(thing);
+        } else if (thingTypeUID.equals(THING_TYPE_RAW_MESSAGE)) {
+            return new RawDeviceHandler(thing);
         }
         return null;
 

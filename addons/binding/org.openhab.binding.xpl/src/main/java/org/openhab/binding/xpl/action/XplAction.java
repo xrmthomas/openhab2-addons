@@ -6,21 +6,20 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.openhab.binding.xpl.deactivated;
+package org.openhab.binding.xpl.action;
 
 import org.cdp1802.xpl.xPL_IdentifierI;
 import org.cdp1802.xpl.xPL_Manager;
 import org.cdp1802.xpl.xPL_MessageI;
 import org.cdp1802.xpl.xPL_MutableMessageI;
 import org.cdp1802.xpl.xPL_Utils;
-import org.eclipse.smarthome.model.script.engine.action.ActionDoc;
-import org.eclipse.smarthome.model.script.engine.action.ParamDoc;
+//import org.eclipse.smarthome.model.script.engine.action.ActionDoc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This class provides static methods that can be used in automation rules
- * for sending xPL raw messages
+ * for sending raw xPL messages
  *
  * @author Gaël L'hopital - Initial contribution
  *
@@ -32,10 +31,9 @@ public class XplAction {
 
     private static final xPL_Manager theManager = xPL_Manager.getManager();
 
-    @ActionDoc(text = "Send an xPL Message", returns = "<code>true</code>, if successful and <code>false</code> otherwise.")
-    public static boolean sendxPLMessage(@ParamDoc(name = "target") String target,
-            @ParamDoc(name = "msgType") String msgType, @ParamDoc(name = "schema") String schema,
-            @ParamDoc(name = "bodyElements") String... bodyElements) {
+    // @ActionDoc(text = "Send an xPL Message", returns = "<code>true</code>, if successful and <code>false</code>
+    // otherwise.")
+    public static boolean sendxPLMessage(String target, String msgType, String schema, String... bodyElements) {
         xPL_MutableMessageI theMessage = xPL_Utils.createMessage();
 
         xPL_IdentifierI targetIdentifier = theManager.getIdentifierManager().parseNamedIdentifier(target);

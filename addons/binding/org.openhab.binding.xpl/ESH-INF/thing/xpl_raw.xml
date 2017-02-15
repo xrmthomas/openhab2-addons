@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="xpl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+
+	<thing-type id="RawMessage">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="xplbridge" />
+        </supported-bridge-type-refs>
+
+		<label>Raw xPL Message</label>
+		<description>Any kind of xPL message can be captured by this thing type</description>
+
+		<channels>
+			<channel id="command" typeId="command" />
+			<channel id="lastMessage" typeId="lastMessage" />
+		</channels>
+		
+		<config-description>
+			<parameter name="rawMessage" type="text" required="true">
+				<label>xPL Message</label>
+				<description>Description of the message that we'll filter : target,message type,schema and at least one body key/value pair"</description>
+			</parameter>
+		</config-description>
+	</thing-type>
+	
+</thing:thing-descriptions>
