@@ -87,6 +87,12 @@
         <item-type>Rollershutter</item-type>
         <label>Shutter</label>
         <description>Shutter channel</description>
-    </channel-type>  
+    </channel-type>
+    
+    <channel-type id="tamper">
+        <item-type>Contact</item-type>
+        <label>Tamper</label>
+        <description>Tamper channel</description>
+    </channel-type>
     
 </thing:thing-descriptions>

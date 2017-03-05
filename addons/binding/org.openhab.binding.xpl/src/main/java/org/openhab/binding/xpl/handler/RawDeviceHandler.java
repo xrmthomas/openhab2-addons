@@ -18,6 +18,7 @@ import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
+import org.eclipse.smarthome.core.types.Command;
 import org.openhab.binding.xpl.config.RawDeviceConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +109,18 @@ public class RawDeviceHandler extends XplDeviceHandler<RawDeviceConfiguration> {
     protected void internalHandleMessage(NamedValuesI messageBody) {
         String value = messageBody.getNamedValue(namedParameter);
         updateState(CHANNEL_COMMAND, new StringType(value));
+    }
+
+    @Override
+    protected void internalHandleCommand(String channelId, Command command, xPL_MutableMessageI message) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected void addIdentifiers(xPL_MutableMessageI message) {
+        // TODO Auto-generated method stub
+
     }
 
 }

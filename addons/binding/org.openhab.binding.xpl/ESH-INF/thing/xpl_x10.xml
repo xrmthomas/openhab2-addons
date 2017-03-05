@@ -9,7 +9,7 @@
         </supported-bridge-type-refs>
 
 		<label>xPL X10 Appliance</label>
-		<description>A X10 like appliance ()KlikAanKlikUit, Chacon, HomeEasy, DomiaLite, Domia, ByeByeStandBy, ELRO AB600, NEXA, Proove, Intertechno, Duwi).</description>
+		<description>A X10 like appliance (KlikAanKlikUit, Chacon, HomeEasy, DomiaLite, Domia, ByeByeStandBy, ELRO AB600, NEXA, Proove, Intertechno, Duwi).</description>
 
 		<channels>
 			<channel id="command" typeId="command" />
@@ -24,10 +24,37 @@
 
 		<config-description>
             <parameter name="deviceId" type="text" required="true">
-                <label>Primary Address</label>
+                <label>Address</label>
                 <description>Device address. Eg A3</description>
             </parameter>
 		</config-description>
 	</thing-type>
 
+    <thing-type id="X10Security">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="xplbridge" />
+        </supported-bridge-type-refs>
+
+        <label>xPL X10 Security</label>
+        <description>A X10 Security appliance (MS10,MS20,MS90,MCV).</description>
+
+        <channels>
+            <channel id="command" typeId="command" />
+            <channel id="tamper" typeId="tamper" />
+            <channel id="lowBattery" typeId="system.low-battery" />
+            <channel id="lastMessage" typeId="lastMessage" />
+        </channels>
+        
+        <properties>
+             <property name="idString1">device</property>
+             <property name="schema">x10.security</property>             
+        </properties> 
+
+        <config-description>
+            <parameter name="deviceId" type="text" required="true">
+                <label>Device Id</label>
+                <description>Device Id. Eg 0x12345</description>
+            </parameter>
+        </config-description>
+    </thing-type>
 </thing:thing-descriptions>

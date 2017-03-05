@@ -18,6 +18,7 @@ import org.openhab.binding.xpl.handler.ACDeviceHandler;
 import org.openhab.binding.xpl.handler.OregonDeviceHandler;
 import org.openhab.binding.xpl.handler.RawDeviceHandler;
 import org.openhab.binding.xpl.handler.X10DeviceHandler;
+import org.openhab.binding.xpl.handler.X10SecurityHandler;
 //import org.eclipse.smarthome.model.script.engine.action.ActionService;
 //import org.openhab.binding.xpl.deactivated.XplAction;
 import org.openhab.binding.xpl.handler.XplBridgeHandler;
@@ -45,6 +46,8 @@ public class XplHandlerFactory extends BaseThingHandlerFactory /* implements Act
             return bridgeHandler;
         } else if (thingTypeUID.equals(THING_TYPE_X10_LIGHTING)) {
             return new X10DeviceHandler(thing);
+        } else if (thingTypeUID.equals(THING_TYPE_X10_SECURITY)) {
+            return new X10SecurityHandler(thing);
         } else if (thingTypeUID.equals(THING_TYPE_AC_DIMMER)) {
             return new ACDeviceHandler(thing);
         } else if (thingTypeUID.equals(THING_TYPE_AC_APPLIANCE)) {

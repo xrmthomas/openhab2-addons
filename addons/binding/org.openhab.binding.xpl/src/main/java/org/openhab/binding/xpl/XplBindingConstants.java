@@ -30,6 +30,7 @@ public class XplBindingConstants {
     public final static ThingTypeUID DEVICE_THING_TYPE = new ThingTypeUID(BINDING_ID, "xpldevice");
 
     public final static ThingTypeUID THING_TYPE_X10_LIGHTING = new ThingTypeUID(BINDING_ID, "X10Appliance");
+    public final static ThingTypeUID THING_TYPE_X10_SECURITY = new ThingTypeUID(BINDING_ID, "X10Security");
     public final static ThingTypeUID THING_TYPE_AC_DIMMER = new ThingTypeUID(BINDING_ID, "ACDimmer");
     public final static ThingTypeUID THING_TYPE_AC_APPLIANCE = new ThingTypeUID(BINDING_ID, "ACAppliance");
     public final static ThingTypeUID THING_TYPE_RAW_MESSAGE = new ThingTypeUID(BINDING_ID, "RawMessage");
@@ -45,11 +46,12 @@ public class XplBindingConstants {
     public final static String CHANNEL_POWER = "power";
     public final static String CHANNEL_INSTANT_AMP = "instantAmp";
     public final static String CHANNEL_COMMAND = "command";
+    public final static String CHANNEL_TAMPER = "tamper";
     public final static String CHANNEL_LEVEL = "level";
     public final static String CHANNEL_LAST_MESSAGE = "lastMessage";
 
     // List of all adressable things in OH
     public final static Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = ImmutableSet.of(BRIDGE_THING_TYPE,
             DEVICE_THING_TYPE, THING_TYPE_OREGON_SENSOR, THING_TYPE_X10_LIGHTING, THING_TYPE_AC_DIMMER,
-            THING_TYPE_AC_APPLIANCE);
+            THING_TYPE_AC_APPLIANCE, THING_TYPE_X10_SECURITY);
 }
