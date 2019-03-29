@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="ipx800"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+    <bridge-type id="ipx800v3">
+        <label>IPX 800</label>
+        <description>The GCE IPX 800 device</description>
+        
+        <properties>
+            <property name="digitalInput">8</property>
+            <property name="analogInput">4</property>
+            <property name="relayOuput">8</property>
+            <property name="counter">8</property>
+        </properties>
+        
+        <config-description>
+            <parameter name="hostname" type="text" required="true">
+                <context>network-address</context>
+                <label>Network Address</label>
+                <description>Network/IP address of the IPX800 without https prefix</description>
+            </parameter>
+            <parameter name="portNumber" type="integer" required="false">
+                <label>Port number</label>
+                <description>TCP client connection port</description>
+                <default>9870</default>
+            </parameter>
+	        <parameter name="reconnectTimeout" type="integer" required="false" min="1000" max="60000" unit="ms"
+	            groupName="connection">
+	            <label>Reconnect Timeout</label>
+	            <description>Time before reconnecting in case of failure (in milliseconds).</description>
+	            <default>5000</default>
+	        </parameter>
+            <parameter name="sendTimeout" type="integer" required="false" min="500" max="60000" unit="ms"
+                groupName="connection">
+                <label>Send Timeout</label>
+                <description>Time before assuming send failure (in milliseconds).</description>
+                <default>1000</default>
+            </parameter>
+            <parameter name="keepaliveTimeout" type="integer" required="false" min="30000" max="60000" unit="ms"
+                groupName="connection">
+                <label>KeepAlive Timeout</label>
+                <description>Time before sending a keepalive to device (in milliseconds).</description>
+                <default>30000</default>
+            </parameter>
+	        <parameter name="keepAlivePeriod" type="integer" min="1" max="10" groupName="connection">
+	            <label>Keep Alive Period</label>
+	            <description>Max keep alive failures before reconnecting (tentatives, 1-10)</description>
+	            <default>1</default>
+	        </parameter>
+        </config-description>
+    </bridge-type>
+    
+    <thing-type id="x400">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="ipx800v3" />
+        </supported-bridge-type-refs>
+
+        <label>X400 Extension</label>
+        <description>Adds 4 analog inputs to the IPX800</description>
+        
+        <properties>
+            <property name="digitalInput">4</property>
+        </properties>
+        
+        <config-description>
+            <parameter name="extensionNumber" type="integer" required="true">
+                <label>Extension Address</label>
+                <description>Adress of the extension (1-3)</description>
+                <options>
+                	<option value="1">1</option>
+                	<option value="2">2</option>
+                	<option value="3">3</option>
+                </options>
+                <default>1</default>
+            </parameter>
+        </config-description>
+    </thing-type>
+    
+    <thing-type id="x880">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="ipx800v3" />
+        </supported-bridge-type-refs>
+
+        <label>X880 Extension</label>
+        <description>8 relays expansion for the IPX800</description>
+        
+        <properties>
+            <property name="digitalInput">8</property>
+            <property name="relayOuput">8</property>
+        </properties>
+        
+        <config-description>
+            <parameter name="extensionNumber" type="integer" required="true">
+                <label>Extension Address</label>
+                <description>Adress of the extension (1-3)</description>
+                <options>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </options>
+                <default>1</default>
+            </parameter>
+        </config-description>
+    </thing-type>
+    
+    <!-- digital channels -->
+    <channel-type id="digitalInput">
+        <item-type>Contact</item-type>
+        <label>Digital Input</label>
+    </channel-type>
+    <channel-type id="relayOuput">
+        <item-type>Switch</item-type>
+        <label>Digital Output</label>
+    </channel-type>
+
+    <!-- analog channels -->
+    <channel-type id="counter">
+        <item-type>Number</item-type>
+        <label>Counter</label>
+    </channel-type>
+    
+    <channel-type id="analogInput">
+        <item-type>Number</item-type>
+        <label>Analog Input</label>
+    </channel-type>
+
+
+</thing:thing-descriptions>
