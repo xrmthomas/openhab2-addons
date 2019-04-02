@@ -10,8 +10,8 @@ package org.openhab.binding.ipx800.internal.itemslot;
 
 import org.eclipse.smarthome.core.types.State;
 import org.eclipse.smarthome.core.types.Type;
-import org.openhab.binding.ipx800.internal.command.Ipx800Port;
 import org.openhab.binding.ipx800.internal.handler.Ipx800Handler;
+import org.openhab.binding.ipx800.internal.handler.Ipx800Port;
 
 /**
  * Ipx800items is an extension of an openhab item. Foreach openhab items using ipx800 binding, one Ipx800Item is

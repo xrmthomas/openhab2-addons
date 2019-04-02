@@ -14,18 +14,15 @@ package org.openhab.binding.ipx800.internal.handler;
 
 import static org.openhab.binding.ipx800.internal.Ipx800BindingConstants.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
-import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.thing.binding.builder.ChannelBuilder;
 import org.eclipse.smarthome.core.thing.binding.builder.ThingBuilder;
@@ -43,19 +40,14 @@ import org.slf4j.LoggerFactory;
  * @author Gaël L'hopital - Port to OH2
  */
 @NonNullByDefault
-public class Ipx800Handler extends BaseBridgeHandler {
+public class Ipx800Handler extends BaseBridgeHandler implements Ipx800EventListener {
     private final Logger logger = LoggerFactory.getLogger(Ipx800Handler.class);
 
-    /* Global configuration for IPX800 Thing */
     private @NonNullByDefault({}) Ipx800Configuration configuration;
-    /* Connection indicator for listening thread. */
-    private boolean connected = false;
-    /* Client socket */
-    private @NonNullByDefault({}) Socket client;
-    /* The reader */
-    private @NonNullByDefault({}) BufferedReader in;
-    /* The writer */
-    private @NonNullByDefault({}) PrintWriter out;
+    private @NonNullByDefault({}) Ipx800DeviceConnector connector;
+    private @NonNullByDefault({}) Ipx800MessageParser parser;
+
+    private final Map<String, @Nullable Double> portValues = new HashMap<>();
 
     public Ipx800Handler(Bridge bridge) {
         super(bridge);
@@ -87,6 +79,12 @@ public class Ipx800Handler extends BaseBridgeHandler {
         scheduler.execute(this::doInitialization);
     }
 
+    @Override
+    public void dispose() {
+        connector.disconnect();
+        super.dispose();
+    }
+
     private int getPropertyValue(String propertyName) {
         return thing.getProperties().containsKey(propertyName)
                 ? Integer.valueOf(thing.getProperties().get(propertyName)).intValue()
@@ -104,53 +102,43 @@ public class Ipx800Handler extends BaseBridgeHandler {
             for (int i = 0; i < count; i++) {
                 String name = property + String.valueOf(i + 1);
                 ChannelUID uid = new ChannelUID(thing.getUID(), name);
-                ChannelBuilder cBuilder = ChannelBuilder.create(uid, PROPERTY_TYPE_MAP.get(property));
-                cBuilder.withType(new ChannelTypeUID(BINDING_ID, property));
-                cBuilder.withLabel(name);
-                tBuilder.withChannel(cBuilder.build());
+                if (this.getThing().getChannel(uid.getId()) == null) {
+                    ChannelBuilder cBuilder = ChannelBuilder.create(uid, PROPERTY_TYPE_MAP.get(property));
+                    cBuilder.withType(new ChannelTypeUID(BINDING_ID, property));
+                    cBuilder.withLabel(name);
+                    tBuilder.withChannel(cBuilder.build());
+                }
             }
         });
 
         updateThing(tBuilder.build());
-        try {
-            connect();
-            updateStatus(ThingStatus.ONLINE);
-        } catch (IOException e) {
-            updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
-        }
+
+        connector = new Ipx800DeviceConnector(configuration);
+        parser = new Ipx800MessageParser(connector);
+        parser.addEventListener(this);
+        updateStatus(ThingStatus.ONLINE);
+        connector.run();
+        // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
 
     }
 
-    /**
-     * Connect to the ipx800
-     *
-     * @throws IOException
-     */
-    private void connect() throws IOException {
-        disconnect();
-        logger.debug("Connecting {}:{}...", configuration.hostname, configuration.portNumber);
-        client = new Socket(configuration.hostname, configuration.portNumber);
-        client.setSoTimeout(configuration.keepaliveTimeout);
-        client.getInputStream().skip(client.getInputStream().available());
-        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        out = new PrintWriter(client.getOutputStream(), true);
-        connected = true;
-        logger.debug("Connected to {}:{}", configuration.hostname, configuration.portNumber);
+    @Override
+    public void dataReceived(String portKind, int portNumber, Double value) {
+
     }
 
-    /**
-     * Disconnect the device
-     */
-    public void disconnect() {
-        if (connected) {
-            logger.debug("Disconnecting");
-            try {
-                client.close();
-            } catch (IOException e) {
-                logger.error("Unable to disconnect {}", e.getMessage());
-            }
-            connected = false;
-            logger.debug("Disconnected");
+    @Override
+    public void errorOccurred(String error) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void dataReceived(String port, Double value) {
+        Double portValue = portValues.get(port);
+        if (portValue == null || !portValue.equals(value)) {
+            portValues.put(port, value);
+            this.getThing().getChannel(BINDING_ID).postUpdate(value);
         }
     }
 

@@ -37,17 +37,16 @@
                 <description>Time before assuming send failure (in milliseconds).</description>
                 <default>1000</default>
             </parameter>
-            <parameter name="keepaliveTimeout" type="integer" required="false" min="30000" max="60000" unit="ms"
-                groupName="connection">
-                <label>KeepAlive Timeout</label>
-                <description>Time before sending a keepalive to device (in milliseconds).</description>
-                <default>30000</default>
-            </parameter>
 	        <parameter name="keepAlivePeriod" type="integer" min="1" max="10" groupName="connection">
 	            <label>Keep Alive Period</label>
 	            <description>Max keep alive failures before reconnecting (tentatives, 1-10)</description>
 	            <default>1</default>
 	        </parameter>
+            <parameter name="keepaliveTimeout" type="integer" min="5000" max="30000" groupName="connection">
+                <label>Keep Alive Timeout</label>
+                <description>Max keep timeout</description>
+                <default>30000</default>
+            </parameter>
         </config-description>
     </bridge-type>
     

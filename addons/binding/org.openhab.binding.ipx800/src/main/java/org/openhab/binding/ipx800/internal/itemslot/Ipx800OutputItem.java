@@ -40,7 +40,7 @@ public class Ipx800OutputItem extends Ipx800AstableSwitch {
     public void updateAndSend(State state) {
         // lastState = state; // Not posted ?
         switchState(false);
-        getPort().getDevice().setOutput(this);
+        // getPort().getDevice().setOutput(this);
     }
 
     @Override

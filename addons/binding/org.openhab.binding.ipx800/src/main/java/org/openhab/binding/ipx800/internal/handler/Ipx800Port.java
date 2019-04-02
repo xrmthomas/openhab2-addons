@@ -1,19 +1,21 @@
 /**
- * Copyright (c) 2010-2019 by the respective copyright holders.
+ * Copyright (c) 2010-2019 Contributors to the openHAB project
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * See the NOTICE file(s) distributed with this work for additional
+ * information.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.ipx800.internal.command;
+package org.openhab.binding.ipx800.internal.handler;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.smarthome.core.types.Type;
-import org.openhab.binding.ipx800.internal.Ipx800DeviceConnector;
-import org.openhab.binding.ipx800.internal.handler.Ipx800Handler;
 import org.openhab.binding.ipx800.internal.itemslot.Ipx800Item;
 
 /**
@@ -30,26 +32,26 @@ public class Ipx800Port {
     /** Number of the current port */
     private int portNumber = 0;
     /** Type */
-    private Ipx800PortType commandType;
+    private /* Ipx800PortType */ Object commandType;
     /** Device of this port */
     private Ipx800DeviceConnector device;
     /** Handler for ipx800 port update */
     private Ipx800Handler handler = null; // new Ipx800HandlerIfChanged();
 
-    public Ipx800Port(Ipx800PortType commandType, int slotNumber) {
-        commandType.assertSlotCompatible(slotNumber);
+    public Ipx800Port(/* Ipx800PortType */ Object commandType, int slotNumber) {
+        // commandType.assertSlotCompatible(slotNumber);
         this.commandType = commandType;
         this.portNumber = slotNumber;
     }
 
-    public Ipx800Port(Ipx800PortType commandType, int slotNumber, Ipx800DeviceConnector device) {
+    public Ipx800Port(/* Ipx800PortType */ Object commandType, int slotNumber, Ipx800DeviceConnector device) {
         this(commandType, slotNumber);
         this.device = device;
     }
 
     @Override
     public String toString() {
-        return this.commandType.name() + ":" + this.portNumber;
+        return /* this.commandType.name() + */ ":" + this.portNumber;
     }
 
     /**
@@ -64,7 +66,7 @@ public class Ipx800Port {
      *
      * @return The command type
      */
-    public Ipx800PortType getCommandType() {
+    public /* Ipx800PortType */ Object getCommandType() {
         return commandType;
     }
 
