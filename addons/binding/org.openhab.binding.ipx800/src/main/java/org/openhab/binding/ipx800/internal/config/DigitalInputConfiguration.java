@@ -12,12 +12,17 @@
  */
 package org.openhab.binding.ipx800.internal.config;
 
+import org.eclipse.smarthome.config.core.Configuration;
+
 /**
- * The {@link ExtensionConfiguration} holds extension
- * configuration informations
+ * The {@link DigitalInputConfiguration} class holds configuration informations of
+ * the ipx800.
  *
- * * @author Gaël L'hopital - Initial contribution
+ * @author Gaël L'hopital - Initial Implementation
  */
-public class ExtensionConfiguration {
-    public Integer extensionNumber;
+public class DigitalInputConfiguration extends Configuration {
+    public Long debouncePeriod;
+    public Long longPressTime;
+    public Long pulsePeriod;
+    public Boolean swapValue;
 }

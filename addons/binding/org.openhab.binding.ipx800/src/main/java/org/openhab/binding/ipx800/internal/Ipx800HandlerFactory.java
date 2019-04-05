@@ -23,8 +23,6 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
 import org.openhab.binding.ipx800.internal.handler.Ipx800Handler;
-import org.openhab.binding.ipx800.internal.handler.X400Handler;
-import org.openhab.binding.ipx800.internal.handler.X880Handler;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,12 +46,8 @@ public class Ipx800HandlerFactory extends BaseThingHandlerFactory {
     @Override
     protected @Nullable ThingHandler createHandler(Thing thing) {
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
-        if (thingTypeUID.equals(BRIDGE_THING_TYPE)) {
+        if (thingTypeUID.equals(IPXV3_THING_TYPE)) {
             return new Ipx800Handler((Bridge) thing);
-        } else if (thingTypeUID.equals(X400_THING_TYPE)) {
-            return new X400Handler(thing);
-        } else if (thingTypeUID.equals(X880_THING_TYPE)) {
-            return new X880Handler(thing);
         } else {
             logger.warn("ThingHandler not found for {}", thing.getThingTypeUID());
             return null;

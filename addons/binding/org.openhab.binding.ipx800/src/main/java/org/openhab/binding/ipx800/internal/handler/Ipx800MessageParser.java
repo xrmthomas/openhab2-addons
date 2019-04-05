@@ -18,8 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.smarthome.core.library.types.OnOffType;
-import org.openhab.binding.ipx800.internal.itemslot.Ipx800OutputItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,32 +47,28 @@ public class Ipx800MessageParser {
     }
 
     /**
-     * Set output of the device sending the command corresponding to the state to the device
+     * Set output of the device sending the corresponding command
      *
-     * @param slot
-     * @param state
+     * @param targetPort
+     * @param targetValue
      */
-    public void setOutput(int portNumber, org.eclipse.smarthome.core.types.State state) {
-        logger.debug("Sending {} to {}", state, portNumber);
-        connector.send(String.format("Set%02d%d", portNumber, state == OnOffType.ON ? 1 : 0));
+    public void setOutput(String targetPort, int targetValue, boolean pulse) {
+        logger.debug("Sending {} to {}", targetValue, targetPort);
+        int port = Integer.parseInt(targetPort);
+        String command = String.format("Set%02d%d", port, targetValue);
+        command += pulse ? "p" : "";
+        connector.send(command);
     }
 
     /**
-     * FIXME use only this method using items also for redirect
+     * Resets the counter value to 0
      *
-     * @param slot
-     * @param item
+     * @param targetCounter
      */
-    public synchronized void setOutput(Ipx800OutputItem item) {
-        org.eclipse.smarthome.core.types.State state = item.getState();
-        Ipx800Port port = item.getPort();
-        if (item.isPulseMode()) {
-            logger.debug("Sending {} to {} in pulse mode", state, port);
-            connector.send(String.format("Set%02d%dp", port.getPortNumber(), state == OnOffType.ON ? 1 : 0));
-        } else {
-            logger.debug("Sending {} to {}", state, port);
-            connector.send(String.format("Set%02d%d", port.getPortNumber(), state == OnOffType.ON ? 1 : 0));
-        }
+    public void resetCounter(String targetCounter) {
+        logger.debug("Resetting counter {} to 0", targetCounter);
+        int counter = Integer.parseInt(targetCounter);
+        connector.send(String.format("ResetCount%d", counter));
     }
 
     /**
@@ -137,24 +131,6 @@ public class Ipx800MessageParser {
         System.out.println(String.format("Received %s : %s", port, value.toString()));
         listeners.forEach(listener -> listener.dataReceived(port, value));
     }
-
-    /*
-     * private @Nullable String intAtEnd(String string) {
-     * int i, j;
-     * i = j = string.length();
-     * while (--i > 0) {
-     * if (Character.isDigit(string.charAt(i))) {
-     * continue;
-     * }
-     * i++;
-     * break;
-     * }
-     * if (j - i > 0) {
-     * return string.substring(i);
-     * }
-     * return null;
-     * }
-     */
 
     public void setExpectedResponse(String expectedResponse) {
         if (expectedResponse.endsWith("s")) { // GetInputs or GetOutputs

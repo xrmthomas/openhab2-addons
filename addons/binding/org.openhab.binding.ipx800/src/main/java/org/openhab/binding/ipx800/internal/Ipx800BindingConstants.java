@@ -13,12 +13,14 @@
 package org.openhab.binding.ipx800.internal;
 
 import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.smarthome.core.library.CoreItemFactory;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 
 /**
@@ -33,49 +35,46 @@ public class Ipx800BindingConstants {
     public static final String BINDING_ID = "ipx800";
 
     // List of Bridge Type UIDs
-    public static final ThingTypeUID BRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "ipx800v3");
-
-    // List of Extension Things Type UIDs
-    public static final ThingTypeUID X400_THING_TYPE = new ThingTypeUID(BINDING_ID, "x400");
-    public static final ThingTypeUID X880_THING_TYPE = new ThingTypeUID(BINDING_ID, "x880");
+    public static final ThingTypeUID IPXV3_THING_TYPE = new ThingTypeUID(BINDING_ID, "ipx800v3");
 
     // Module Properties
-    public static final String PROPERTY_DIGITAL_INPUT = "digitalInput";
-    public static final String PROPERTY_ANALOG_INPUT = "analogInput";
-    public static final String PROPERTY_RELAY_OUTPUT = "relayOuput";
-    public static final String PROPERTY_COUNTER = "counter";
+    public static final String PROPERTY_DIGITAL_INPUT = "I";
+    public static final String PROPERTY_ANALOG_INPUT = "A";
+    public static final String PROPERTY_COUNTER = "C";
+    public static final String PROPERTY_RELAY_OUTPUT = "O";
 
-    // List of all item types
-    public static final String ANALOG_ITEM = "Number";
-    public static final String DATE_TIME_ITEM = "DateTime";
-    public static final String DIGITAL_INPUT_ITEM = "Contact";
-    public static final String DIGITAL_OUTPUT_ITEM = "Switch";
-    public static final String INFORMATION_ITEM = "String";
+    public static final String TIMESTAMP_CHANNEL_NAME = "timestamp";
+    public static final String LAST_STATE_DURATION_CHANNEL_NAME = "lastStateDuration";
+    public static final String CHANNEL_TYPE_PUSH_BUTTON_TRIGGER = "push-button-trigger";
 
-    // List of all supported physical devices and modules
-    public static final Set<ThingTypeUID> SUPPORTED_DEVICE_THING_TYPES_UIDS = Stream
-            .of(X400_THING_TYPE, X880_THING_TYPE).collect(Collectors.toSet());
+    // Channel configuration entries
+    public static final String CONFIGURATION_PULSE = "pulse";
+    public static final String CONFIGURATION_DEBOUNCE = "debouncePeriod";
+    public static final String CONFIGURATION_HISTERESIS = "Histeresis";
+    public static final String CONFIGURATION_LONG_PRESS = "longPressTime";
+    public static final String CONFIGURATION_INVERT = "swapValue";
+    public static final String CONFIGURATION_PULSE_PERIOD = "pulsePeriod";
 
-    // List of all adressable things in OH = SUPPORTED_DEVICE_THING_TYPES_UIDS + the virtual bridge
-    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Stream
-            .concat(SUPPORTED_DEVICE_THING_TYPES_UIDS.stream(), Stream.of(BRIDGE_THING_TYPE))
-            .collect(Collectors.toSet());
+    public static final String EVENT_PRESSED = "PRESSED";
+    public static final String EVENT_RELEASED = "RELEASED";
+    public static final String EVENT_SHORT_PRESS = "SHORT_PRESS";
+    public static final String EVENT_LONG_PRESS = "LONG_PRESS";
+    public static final String EVENT_PULSE = "PULSE";
 
-    public static final Set<String> MODULE_PROPERTIES = Stream
-            .of(PROPERTY_DIGITAL_INPUT, PROPERTY_ANALOG_INPUT, PROPERTY_RELAY_OUTPUT, PROPERTY_COUNTER)
-            .collect(Collectors.toSet());
+    // List ofadressable things
+    public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(IPXV3_THING_TYPE);
 
     public static final Map<String, String> PROPERTY_TYPE_MAP = Stream
-            .of(new AbstractMap.SimpleEntry<>(PROPERTY_DIGITAL_INPUT, DIGITAL_INPUT_ITEM),
-                    new AbstractMap.SimpleEntry<>(PROPERTY_ANALOG_INPUT, ANALOG_ITEM),
-                    new AbstractMap.SimpleEntry<>(PROPERTY_RELAY_OUTPUT, DIGITAL_OUTPUT_ITEM),
-                    new AbstractMap.SimpleEntry<>(PROPERTY_COUNTER, ANALOG_ITEM))
+            .of(new AbstractMap.SimpleEntry<>(PROPERTY_DIGITAL_INPUT, CoreItemFactory.CONTACT),
+                    new AbstractMap.SimpleEntry<>(PROPERTY_ANALOG_INPUT, CoreItemFactory.NUMBER),
+                    new AbstractMap.SimpleEntry<>(PROPERTY_RELAY_OUTPUT, CoreItemFactory.SWITCH),
+                    new AbstractMap.SimpleEntry<>(PROPERTY_COUNTER, CoreItemFactory.NUMBER))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-    public static final Map<String, String> PROPERTY_PREFIX_MAP = Stream
-            .of(new AbstractMap.SimpleEntry<>(PROPERTY_DIGITAL_INPUT, "I"),
-                    new AbstractMap.SimpleEntry<>(PROPERTY_ANALOG_INPUT, "A"),
-                    new AbstractMap.SimpleEntry<>(PROPERTY_RELAY_OUTPUT, "O"),
-                    new AbstractMap.SimpleEntry<>(PROPERTY_COUNTER, "C"))
+    public static final Map<String, String> PROPERTY_PREFIX_LABELS = Stream
+            .of(new AbstractMap.SimpleEntry<>(PROPERTY_DIGITAL_INPUT, "Digital Input"),
+                    new AbstractMap.SimpleEntry<>(PROPERTY_ANALOG_INPUT, "Analog Input"),
+                    new AbstractMap.SimpleEntry<>(PROPERTY_RELAY_OUTPUT, "Relay Ouput"),
+                    new AbstractMap.SimpleEntry<>(PROPERTY_COUNTER, "Counter"))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 }
