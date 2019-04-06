@@ -22,5 +22,4 @@ import org.eclipse.smarthome.config.core.Configuration;
  */
 public class RelayOutputConfiguration extends Configuration {
     public Boolean pulse;
-    public Boolean swapValue;
 }

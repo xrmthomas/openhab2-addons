@@ -21,5 +21,5 @@ import org.eclipse.smarthome.config.core.Configuration;
  * @author Gaël L'hopital - Initial Implementation
  */
 public class AnalogInputConfiguration extends Configuration {
-    public Long histeresis;
+    public Long histeresis = 0l;
 }

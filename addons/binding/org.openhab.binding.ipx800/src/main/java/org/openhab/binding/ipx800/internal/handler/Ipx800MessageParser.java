@@ -30,7 +30,6 @@ public class Ipx800MessageParser {
             .compile("I=" + IO_DESCRIPTOR + "&O=" + IO_DESCRIPTOR + "&([AC]\\d{1,2}=\\d+&)*[^I]*");
 
     private String expectedResponse = "";
-    // private int expectedPortResponse = -1;
     private final Ipx800DeviceConnector connector;
 
     private List<Ipx800EventListener> listeners = new ArrayList<>();
@@ -61,17 +60,6 @@ public class Ipx800MessageParser {
     }
 
     /**
-     * Resets the counter value to 0
-     *
-     * @param targetCounter
-     */
-    public void resetCounter(String targetCounter) {
-        logger.debug("Resetting counter {} to 0", targetCounter);
-        int counter = Integer.parseInt(targetCounter);
-        connector.send(String.format("ResetCount%d", counter));
-    }
-
-    /**
      *
      * @param data
      */
@@ -83,13 +71,12 @@ public class Ipx800MessageParser {
             if (portKind != null) {
                 for (int count = 0; count < data.length(); count++) {
                     setStatus(portKind + String.valueOf(count), new Double(data.charAt(count) - '0'));
-                    // setStatus(portKind, count, new Double(data.charAt(count) - '0'));
                 }
                 expectedResponse = "";
             }
         } else {
             final Matcher matcher = VALIDATION_PATTERN.matcher(data);
-            if (matcher.matches()) { // Workaround of an IPX800 bug
+            if (matcher.matches()) {
                 for (String status : data.split("&")) {
                     String statusPart[] = status.split("=");
                     String portKind = statusPart[0].substring(0, 1);
@@ -98,34 +85,27 @@ public class Ipx800MessageParser {
                         case "I":
                         case "O": {
                             for (int count = 0; count < statusPart[1].length(); count++) {
-                                setStatus(portKind + String.valueOf(count), new Double(data.charAt(count) - '0'));
-                                // setStatus(portKind, count, new Double(statusPart[1].charAt(count) - '0'));
+                                setStatus(portKind + String.valueOf(count + 1),
+                                        new Double(statusPart[1].charAt(count) - '0'));
                             }
                             break;
                         }
                         case "C":
-                            portNumShift = -1; // Align counters on 0 based array
+                            portNumShift = -1; // Align counters on 1 based array
                         case "A": {
                             int portNumber = Integer.parseInt(statusPart[0].substring(1));
-                            setStatus(portKind + String.valueOf(portNumber + portNumShift),
+                            setStatus(portKind + String.valueOf(portNumber + portNumShift + 1),
                                     Double.parseDouble(statusPart[1]));
-                            // setStatus(portKind, portNumber + portNumShift, Double.parseDouble(statusPart[1]));
                         }
                     }
                 }
-            } // else if ("GetCount".equals(expectedResponse) || "GetAn".equals(expectedResponse)) {
-              // setStatus(expectedResponse.substring(3, 4), expectedPortResponse, Double.parseDouble(data)); }
-            else /* if (expectedResponse.startsWith("GetCount") || expectedResponse.startsWith("GetAn")) */ {
+            } else if (expectedResponse != "") {
                 setStatus(expectedResponse, Double.parseDouble(data));
                 expectedResponse = "";
             }
 
         }
     }
-
-    // private void setStatus(String portKind, int portNumber, Double value) {
-    // listeners.forEach(listener -> listener.dataReceived(portKind, portNumber, value));
-    // }
 
     private void setStatus(String port, Double value) {
         System.out.println(String.format("Received %s : %s", port, value.toString()));
@@ -138,17 +118,31 @@ public class Ipx800MessageParser {
         } else { // GetAnx or GetCountx
             this.expectedResponse = expectedResponse.replaceAll("GetAn", "A").replaceAll("GetCount", "C")
                     .replaceAll("GetIn", "I").replaceAll("GetOut", "O");
-            /*
-             * String portNum = intAtEnd(expectedResponse);
-             * if (portNum != null) {
-             * this.expectedResponse = expectedResponse.substring(0, expectedResponse.length() - portNum.length());
-             * expectedPortResponse = Integer.parseInt(portNum) - 1;
-             * } else {
-             * listeners.forEach(
-             * listener -> listener.errorOccurred("Unandled expected response : " + expectedResponse));
-             * }
-             */
         }
+    }
+
+    /**
+     * Resets the counter value to 0
+     *
+     * @param targetCounter
+     */
+    public void resetCounter(String targetCounter) {
+        logger.debug("Resetting counter {} to 0", targetCounter);
+        int counter = Integer.parseInt(targetCounter);
+        connector.send(String.format("ResetCount%d", counter));
+        try {
+            Thread.sleep(200);
+            String request = String.format("GetCount%d", counter);
+            setExpectedResponse(request);
+            connector.send(request);
+        } catch (InterruptedException e) {
+            errorOccurred(e);
+        }
+    }
+
+    public void errorOccurred(Exception e) {
+        System.out.println(String.format("Error received from connector : %s", e.getMessage()));
+        listeners.forEach(listener -> listener.errorOccurred(e));
     }
 
 }

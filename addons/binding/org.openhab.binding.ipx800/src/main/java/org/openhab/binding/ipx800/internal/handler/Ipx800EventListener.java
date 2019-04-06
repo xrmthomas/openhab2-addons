@@ -35,6 +35,6 @@ public interface Ipx800EventListener {
      *
      * @param error Error occurred.
      */
-    void errorOccurred(String error);
+    void errorOccurred(Exception e);
 
 }

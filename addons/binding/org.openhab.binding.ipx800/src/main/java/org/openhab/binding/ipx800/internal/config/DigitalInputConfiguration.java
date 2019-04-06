@@ -24,5 +24,5 @@ public class DigitalInputConfiguration extends Configuration {
     public Long debouncePeriod;
     public Long longPressTime;
     public Long pulsePeriod;
-    public Boolean swapValue;
+    public Long pulseTimeout;
 }

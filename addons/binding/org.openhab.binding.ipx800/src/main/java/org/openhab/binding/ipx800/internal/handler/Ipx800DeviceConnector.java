@@ -18,9 +18,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Optional;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.ipx800.internal.config.Ipx800Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * reading, writing and disconnecting from the Ipx800.
  *
  * @author Seebag - Initial contribution
- * @author Gaël L'hopital - Port to OH2
+ * @author Gaël L'hopital - Ported and adapted for OH2
  */
 @NonNullByDefault
 public class Ipx800DeviceConnector extends Thread {
@@ -38,7 +38,7 @@ public class Ipx800DeviceConnector extends Thread {
     private final static String ENDL = "\r\n";
 
     private final Ipx800Configuration config;
-    private @Nullable Ipx800MessageParser parser = null;
+    private Optional<Ipx800MessageParser> parser = Optional.empty();
 
     private boolean interrupted = false;
     private boolean connected = false;
@@ -60,8 +60,8 @@ public class Ipx800DeviceConnector extends Thread {
 
     public synchronized void send(String message) {
         logger.debug("Sending '{}' to Ipx800", message);
-        // Ceci marche-t'il aussi avec out.println(message) ?
         out.write(message + ENDL);
+        out.flush();
     }
 
     /**
@@ -117,8 +117,7 @@ public class Ipx800DeviceConnector extends Thread {
             failedKeepalive = 0;
             logger.trace("Sending keepalive");
         }
-        out.println("GetIn01");
-        out.flush();
+        send("GetIn01");
         waitingKeepaliveResponse = true;
     }
 
@@ -137,26 +136,37 @@ public class Ipx800DeviceConnector extends Thread {
                     try {
                         String command = in.readLine();
                         waitingKeepaliveResponse = false;
-                        if (parser != null) {
-                            parser.unsollicitedUpdate(command);
-                        }
+                        parser.ifPresent(parser -> parser.unsollicitedUpdate(command));
                     } catch (SocketTimeoutException e) {
-                        sendKeepalive();
+                        handleException(e);
                     }
                 }
                 disconnect();
             } catch (IOException e) {
-                logger.error(e.getMessage() + " will retry in " + config.reconnectTimeout + "ms");
+                handleException(e);
             }
             try {
                 Thread.sleep(config.reconnectTimeout);
             } catch (InterruptedException e) {
-                logger.error(e.getMessage());
+                handleException(e);
             }
         }
     }
 
+    private void handleException(Exception e) {
+        if (e instanceof SocketTimeoutException) {
+            sendKeepalive();
+        } else if (e instanceof IOException) {
+            logger.warn(e.getMessage() + " will retry in " + config.reconnectTimeout + "ms");
+        }
+        if (parser.isPresent()) {
+            parser.get().errorOccurred(e);
+        } else {
+            logger.warn(e.getMessage());
+        }
+    }
+
     public void setParser(Ipx800MessageParser parser) {
-        this.parser = parser;
+        this.parser = Optional.of(parser);
     }
 }

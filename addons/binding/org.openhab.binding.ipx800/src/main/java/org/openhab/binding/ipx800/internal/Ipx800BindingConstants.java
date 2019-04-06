@@ -45,14 +45,14 @@ public class Ipx800BindingConstants {
 
     public static final String TIMESTAMP_CHANNEL_NAME = "timestamp";
     public static final String LAST_STATE_DURATION_CHANNEL_NAME = "lastStateDuration";
-    public static final String CHANNEL_TYPE_PUSH_BUTTON_TRIGGER = "push-button-trigger";
+    public static final String CHANNEL_TYPE_PUSH_BUTTON_TRIGGER = "pushButtonTrigger";
 
     // Channel configuration entries
     public static final String CONFIGURATION_PULSE = "pulse";
     public static final String CONFIGURATION_DEBOUNCE = "debouncePeriod";
     public static final String CONFIGURATION_HISTERESIS = "Histeresis";
     public static final String CONFIGURATION_LONG_PRESS = "longPressTime";
-    public static final String CONFIGURATION_INVERT = "swapValue";
+    public static final String CONFIGURATION_PULSE_TIMEOUT = "pulseTimeout";
     public static final String CONFIGURATION_PULSE_PERIOD = "pulsePeriod";
 
     public static final String EVENT_PRESSED = "PRESSED";
@@ -61,7 +61,7 @@ public class Ipx800BindingConstants {
     public static final String EVENT_LONG_PRESS = "LONG_PRESS";
     public static final String EVENT_PULSE = "PULSE";
 
-    // List ofadressable things
+    // List of adressable things
     public static final Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = Collections.singleton(IPXV3_THING_TYPE);
 
     public static final Map<String, String> PROPERTY_TYPE_MAP = Stream

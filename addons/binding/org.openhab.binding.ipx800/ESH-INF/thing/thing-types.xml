@@ -54,24 +54,27 @@
     <channel-type id="I">
         <item-type>Contact</item-type>
         <label>Digital Input</label>
+        <category>Contact</category>
+        <state pattern="%s" readOnly="true"></state>
         <config-description>
             <parameter name="debouncePeriod" type="integer" min="0" max="2000" unit="ms">
                 <label>Debounce time</label>
                 <default>0</default>
             </parameter>
-            <parameter name="longPressTime" type="integer" required="true" step="1000" min="0" max="5000" unit="ms">
+            <parameter name="longPressTime" type="integer" step="1000" min="0" max="5000" unit="ms">
                 <label>Long Press Time</label>
                 <description>Long press time in milliseconds.</description>
                 <default>0</default>
             </parameter>
-            <parameter name="pulsePeriod" type="integer" required="true" step="500" min="0" max="50000" unit="ms">
+            <parameter name="pulsePeriod" type="integer" step="500" min="0" max="50000" unit="ms">
                 <label>Pulse Period</label>
                 <description>Pulse period in milliseconds.</description>
                 <default>0</default>
             </parameter>
-            <parameter name="swapValue" type="boolean">
-                <label>Swap Value</label>
-                <default>false</default>
+            <parameter name="pulseTimeout" type="integer" step="500" min="0" max="50000" unit="ms">
+                <label>Pulse Timeout</label>
+                <description>Maximum period for sending pulses in milliseconds.</description>
+                <default>0</default>
             </parameter>
         </config-description>
     </channel-type>
@@ -82,10 +85,6 @@
         <config-description>
             <parameter name="pulse" type="boolean">
                 <label>Pulse output</label>
-                <default>false</default>
-            </parameter>
-            <parameter name="swapValue" type="boolean">
-                <label>Swap Value</label>
                 <default>false</default>
             </parameter>
         </config-description>
@@ -122,7 +121,7 @@
         <state pattern="%.0f %unit%" readOnly="true" />
     </channel-type>
     
-    <channel-type id="push-button-trigger">
+    <channel-type id="pushButtonTrigger">
         <kind>trigger</kind>
         <label>Push Button Trigger Channel</label>
         <event>
