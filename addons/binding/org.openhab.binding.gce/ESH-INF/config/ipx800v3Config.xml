@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-description:config-descriptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config-description="https://openhab.org/schemas/config-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/config-description/v1.0.0
+		https://openhab.org/schemas/config-description-1.0.0.xsd">
+
+	<config-description uri="thing-type:gce:ipx800v3Config">
+            <parameter name="hostname" type="text" required="true">
+                <context>network-address</context>
+                <label>Network Address</label>
+                <description>Network/IP address of the IPX800 without https prefix</description>
+            </parameter>
+            <parameter name="portNumber" type="integer" required="false">
+                <label>Port number</label>
+                <description>TCP client connection port</description>
+                <default>9870</default>
+            </parameter>
+            <parameter name="reconnectTimeout" type="integer" required="false" min="1000" max="60000" unit="ms"
+                groupName="connection">
+                <label>Reconnect Timeout</label>
+                <description>Time before reconnecting in case of failure (in milliseconds).</description>
+                <default>5000</default>
+            </parameter>
+            <parameter name="sendTimeout" type="integer" required="false" min="500" max="60000" unit="ms"
+                groupName="connection">
+                <label>Send Timeout</label>
+                <description>Time before assuming send failure (in milliseconds).</description>
+                <default>1000</default>
+            </parameter>
+            <parameter name="keepAlivePeriod" type="integer" min="1" max="10" groupName="connection">
+                <label>Keep Alive Period</label>
+                <description>Max keep alive failures before reconnecting (tentatives, 1-10)</description>
+                <default>1</default>
+            </parameter>
+            <parameter name="keepaliveTimeout" type="integer" min="5000" max="30000" groupName="connection">
+                <label>Keep Alive Timeout</label>
+                <description>Max keep timeout</description>
+                <default>30000</default>
+            </parameter>
+	</config-description>
+</config-description:config-descriptions>
