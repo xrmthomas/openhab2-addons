@@ -158,8 +158,17 @@ public class SynopAnalyzerHandler extends BaseThingHandler {
             case WIND_SPEED_BEAUFORT:
                 QuantityType<Speed> windStrength = getWindStrength(synop);
                 QuantityType<Speed> wsKpH = windStrength.toUnit(SIUnits.KILOMETRE_PER_HOUR);
-                return (wsKpH != null) ? new DecimalType(Math.round(Math.pow(wsKpH.floatValue() / 3.01, 0.666666666)))
-                        : UnDefType.NULL;
+                if (wsKpH != null) {
+                    long beaufort = Math.round(Math.pow(wsKpH.floatValue() / 3.01, 0.666666666));
+                    if (beaufort >= 0 && beaufort < 13) {
+                        return new DecimalType(beaufort);
+                    } else {
+                        logger.warn("Strange beaufort result '{}' for wind speed : '{}'", beaufort, windStrength);
+                        return UnDefType.UNDEF;
+                    }
+                } else {
+                    return UnDefType.UNDEF;
+                }
             case TIME_UTC:
                 ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
                 int year = synop.getYear() == 0 ? now.getYear() : synop.getYear();
