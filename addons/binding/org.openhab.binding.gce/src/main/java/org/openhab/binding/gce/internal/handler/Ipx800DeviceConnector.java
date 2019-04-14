@@ -157,6 +157,7 @@ public class Ipx800DeviceConnector extends Thread {
     private void handleException(Exception e) {
         if (e instanceof SocketTimeoutException) {
             sendKeepalive();
+            return;
         } else if (e instanceof IOException) {
             logger.warn(e.getMessage() + " will retry in " + config.reconnectTimeout + "ms");
         }

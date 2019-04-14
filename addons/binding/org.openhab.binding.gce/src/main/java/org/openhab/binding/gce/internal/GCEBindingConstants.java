@@ -39,7 +39,7 @@ public class GCEBindingConstants {
     public static final String GROUP_RELAY_OUTPUT = "O";
 
     public static final String TIMESTAMP_CHANNEL_NAME = "timestamp";
-    public static final String LAST_STATE_DURATION_CHANNEL_NAME = "lastStateDuration";
+    public static final String LAST_STATE_DURATION_CHANNEL_NAME = "duration";
     public static final String CHANNEL_TYPE_PUSH_BUTTON_TRIGGER = "pushButtonTrigger";
 
     public static final String EVENT_PRESSED = "PRESSED";

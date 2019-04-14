@@ -111,7 +111,9 @@ public class Ipx800Handler extends BaseThingHandler implements Ipx800EventListen
 
     @Override
     public void dispose() {
-        connector.destroyAndExit();
+        if (connector != null) {
+            connector.destroyAndExit();
+        }
         super.dispose();
     }
 
@@ -122,7 +124,7 @@ public class Ipx800Handler extends BaseThingHandler implements Ipx800EventListen
         parser = new Ipx800MessageParser(connector);
         parser.addEventListener(this);
         updateStatus(ThingStatus.ONLINE);
-        // connector.run();
+        connector.run();
     }
 
     @Override
@@ -149,77 +151,86 @@ public class Ipx800Handler extends BaseThingHandler implements Ipx800EventListen
     @Override
     public void dataReceived(String port, Double value) {
         Channel channel = getChannelForPort(port);
-        PortData portData = portDatas.get(channel.getUID().getId());
-        if (portData != null) {
-            if (value.equals(portData.value)) {
-                return;
-            }
+        if (channel != null) {
+            PortData portData = portDatas.get(channel.getUID().getId());
+            if (portData != null) {
+                if (value.equals(portData.value)) {
+                    return;
+                }
 
-            ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
-            boolean initializing = portData.value == -1;
-            long sinceLastChange = Duration.between(portData.timestamp, now).toMillis();
-            Configuration configuration = channel.getConfiguration();
-            State state = UnDefType.UNDEF;
-            switch (channel.getUID().getGroupId()) {
-                case GROUP_COUNTER:
-                    state = new DecimalType(value);
-                    break;
-                case GROUP_ANALOG_INPUT:
-                    AnalogInputConfiguration config = configuration.as(AnalogInputConfiguration.class);
-                    long histeresis = config.histeresis / 2;
-                    if ((value < portData.value + histeresis || value > portData.value - histeresis) && !initializing) {
-                        return;
-                    }
-                    state = new DecimalType(value);
-                    break;
-                case GROUP_DIGITAL_INPUT:
-                    DigitalInputConfiguration config2 = configuration.as(DigitalInputConfiguration.class);
-                    if (config2.debouncePeriod != 0
-                            && now.isBefore(portData.timestamp.plus(config2.debouncePeriod, ChronoUnit.MILLIS))) {
-                        return;
-                    }
-                    cancelIfPulsing(portData);
-                    if (value == 1) {
-                        state = OpenClosedType.CLOSED;
-                        if (portData.value != -1) {
-                            triggerPushButtonChannel(channel, EVENT_PRESSED);
-                        }
-                        if (config2.longPressTime != 0 && !initializing) {
-                            scheduler.schedule(new LongPressEvaluator(channel, port, portData), config2.longPressTime,
-                                    TimeUnit.MILLISECONDS);
-                        } else if (config2.pulsePeriod != 0) {
-                            portData.pulsing = scheduler.scheduleAtFixedRate(() -> {
-                                triggerPushButtonChannel(channel, EVENT_PULSE);
-                            }, config2.pulsePeriod, config2.pulsePeriod, TimeUnit.MILLISECONDS);
-                            if (config2.pulseTimeout != 0) {
-                                scheduler.schedule(() -> {
-                                    cancelIfPulsing(portData);
-                                }, config2.pulseTimeout, TimeUnit.MILLISECONDS);
+                ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+                boolean initializing = portData.value == -1;
+                long sinceLastChange = Duration.between(portData.timestamp, now).toMillis();
+                Configuration configuration = channel.getConfiguration();
+                State state = UnDefType.UNDEF;
+                String groupId = channel.getUID().getGroupId();
+                if (groupId != null) {
+                    switch (groupId) {
+                        case GROUP_COUNTER:
+                            state = new DecimalType(value);
+                            break;
+                        case GROUP_ANALOG_INPUT:
+                            AnalogInputConfiguration config = configuration.as(AnalogInputConfiguration.class);
+                            long histeresis = config.histeresis / 2;
+                            if ((value < portData.value + histeresis || value > portData.value - histeresis)
+                                    && !initializing) {
+                                return;
                             }
-                        }
-                    } else {
-                        state = OpenClosedType.OPEN;
-                        triggerPushButtonChannel(channel, EVENT_RELEASED);
-                        if (config2.longPressTime != 0 && sinceLastChange < config2.longPressTime && !initializing) {
-                            triggerPushButtonChannel(channel, EVENT_SHORT_PRESS);
-                        }
+                            state = new DecimalType(value);
+                            break;
+                        case GROUP_DIGITAL_INPUT:
+                            DigitalInputConfiguration config2 = configuration.as(DigitalInputConfiguration.class);
+                            if (config2.debouncePeriod != 0 && now
+                                    .isBefore(portData.timestamp.plus(config2.debouncePeriod, ChronoUnit.MILLIS))) {
+                                return;
+                            }
+                            cancelIfPulsing(portData);
+                            if (value == 1) {
+                                state = OpenClosedType.CLOSED;
+                                if (portData.value != -1) {
+                                    triggerPushButtonChannel(channel, EVENT_PRESSED);
+                                }
+                                if (config2.longPressTime != 0 && !initializing) {
+                                    scheduler.schedule(new LongPressEvaluator(channel, port, portData),
+                                            config2.longPressTime, TimeUnit.MILLISECONDS);
+                                } else if (config2.pulsePeriod != 0) {
+                                    portData.pulsing = scheduler.scheduleAtFixedRate(() -> {
+                                        triggerPushButtonChannel(channel, EVENT_PULSE);
+                                    }, config2.pulsePeriod, config2.pulsePeriod, TimeUnit.MILLISECONDS);
+                                    if (config2.pulseTimeout != 0) {
+                                        scheduler.schedule(() -> {
+                                            cancelIfPulsing(portData);
+                                        }, config2.pulseTimeout, TimeUnit.MILLISECONDS);
+                                    }
+                                }
+                            } else {
+                                state = OpenClosedType.OPEN;
+                                triggerPushButtonChannel(channel, EVENT_RELEASED);
+                                if (config2.longPressTime != 0 && sinceLastChange < config2.longPressTime
+                                        && !initializing) {
+                                    triggerPushButtonChannel(channel, EVENT_SHORT_PRESS);
+                                }
+                            }
+                            break;
+                        case GROUP_RELAY_OUTPUT:
+                            state = value == 1 ? OnOffType.ON : OnOffType.OFF;
+                            break;
                     }
-                    break;
-                case GROUP_RELAY_OUTPUT:
-                    state = value == 1 ? OnOffType.ON : OnOffType.OFF;
-                    break;
+                }
+                updateState(channel.getUID().getId(), state);
+                if (!initializing) {
+                    updateState(channel.getUID().getId() + PROPERTY_SEPARATOR + TIMESTAMP_CHANNEL_NAME,
+                            new DateTimeType(now));
+                    updateState(channel.getUID().getId() + PROPERTY_SEPARATOR + LAST_STATE_DURATION_CHANNEL_NAME,
+                            new QuantityType<>(sinceLastChange / 1000, SmartHomeUnits.SECOND));
+                }
+                portData.value = value;
+                portData.timestamp = now;
+            } else {
+                logger.debug("Received data '{}' for not configured port '{}'", value, port);
             }
-            updateState(channel.getUID().getId(), state);
-            if (!initializing) {
-                updateState(channel.getUID().getId() + PROPERTY_SEPARATOR + TIMESTAMP_CHANNEL_NAME,
-                        new DateTimeType(now));
-                updateState(channel.getUID().getId() + PROPERTY_SEPARATOR + LAST_STATE_DURATION_CHANNEL_NAME,
-                        new QuantityType<>(sinceLastChange / 1000, SmartHomeUnits.SECOND));
-            }
-            portData.value = value;
-            portData.timestamp = now;
         } else {
-            logger.info("Received data '{}' for not configured port '{}'", value, port);
+            logger.debug("Received data '{}' for not configured channel '{}'", value, port);
         }
     }
 
@@ -235,7 +246,7 @@ public class Ipx800Handler extends BaseThingHandler implements Ipx800EventListen
         String groupId = channelUID.getGroupId();
         String channelName = channelUID.getIdWithoutGroup();
 
-        if (channelName.chars().allMatch(Character::isDigit)) {
+        if (channelName.chars().allMatch(Character::isDigit) && groupId != null) {
             switch (groupId) {
                 case GROUP_RELAY_OUTPUT:
                     if (command instanceof OnOffType) {

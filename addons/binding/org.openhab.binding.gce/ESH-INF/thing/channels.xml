@@ -12,42 +12,42 @@
                 <label>Digital Input 1</label></channel> 
             <channel id="1-event" typeId="pushButtonTrigger" />
             <channel id="1-timestamp" typeId="timestamp" />
-            <channel id="1-duration" typeId="lastStateDuration" />
+            <channel id="1-duration" typeId="duration" />
             <channel id="2" typeId="digitalInput" >
                 <label>Digital Input 2</label></channel> 
             <channel id="2-event" typeId="pushButtonTrigger" />
             <channel id="2-timestamp" typeId="timestamp" />
-            <channel id="2-duration" typeId="lastStateDuration" />
+            <channel id="2-duration" typeId="duration" />
             <channel id="3" typeId="digitalInput" >
                 <label>Digital Input 3</label></channel> 
             <channel id="3-event" typeId="pushButtonTrigger" />
             <channel id="3-timestamp" typeId="timestamp" />
-            <channel id="3-duration" typeId="lastStateDuration" />
+            <channel id="3-duration" typeId="duration" />
             <channel id="4" typeId="digitalInput" >
                 <label>Digital Input 4</label></channel> 
             <channel id="4-event" typeId="pushButtonTrigger" />
             <channel id="4-timestamp" typeId="timestamp" />
-            <channel id="4-duration" typeId="lastStateDuration" />
+            <channel id="4-duration" typeId="duration" />
             <channel id="5" typeId="digitalInput" >
                 <label>Digital Input 5</label></channel> 
             <channel id="5-event" typeId="pushButtonTrigger" />
             <channel id="5-timestamp" typeId="timestamp" />
-            <channel id="5-duration" typeId="lastStateDuration" />
+            <channel id="5-duration" typeId="duration" />
             <channel id="6" typeId="digitalInput" >
                 <label>Digital Input 6</label></channel> 
             <channel id="6-event" typeId="pushButtonTrigger" />
             <channel id="6-timestamp" typeId="timestamp" />
-            <channel id="6-duration" typeId="lastStateDuration" />
+            <channel id="6-duration" typeId="duration" />
             <channel id="7" typeId="digitalInput" >
                 <label>Digital Input 7</label></channel> 
             <channel id="7-event" typeId="pushButtonTrigger" />
             <channel id="7-timestamp" typeId="timestamp" />
-            <channel id="7-duration" typeId="lastStateDuration" />
+            <channel id="7-duration" typeId="duration" />
             <channel id="8" typeId="digitalInput" >
                 <label>Digital Input 8</label></channel> 
             <channel id="8-event" typeId="pushButtonTrigger" />
             <channel id="8-timestamp" typeId="timestamp" />
-            <channel id="8-duration" typeId="lastStateDuration" />
+            <channel id="8-duration" typeId="duration" />
         </channels>
     </channel-group-type>
     
@@ -57,35 +57,35 @@
             <channel id="1" typeId="digitalOutput" >
                 <label>Digital Output 1</label></channel> 
             <channel id="1-timestamp" typeId="timestamp" />
-            <channel id="1-duration" typeId="lastStateDuration" />
+            <channel id="1-duration" typeId="duration" />
             <channel id="2" typeId="digitalOutput" >
                 <label>Digital Output 2</label></channel> 
             <channel id="2-timestamp" typeId="timestamp" />
-            <channel id="2-duration" typeId="lastStateDuration" />
+            <channel id="2-duration" typeId="duration" />
             <channel id="3" typeId="digitalOutput" >
                 <label>Digital Output 3</label></channel> 
             <channel id="3-timestamp" typeId="timestamp" />
-            <channel id="3-duration" typeId="lastStateDuration" />
+            <channel id="3-duration" typeId="duration" />
             <channel id="4" typeId="digitalOutput" >
                 <label>Digital Output 4</label></channel> 
             <channel id="4-timestamp" typeId="timestamp" />
-            <channel id="4-duration" typeId="lastStateDuration" />
+            <channel id="4-duration" typeId="duration" />
             <channel id="5" typeId="digitalOutput" >
                 <label>Digital Output 5</label></channel> 
             <channel id="5-timestamp" typeId="timestamp" />
-            <channel id="5-duration" typeId="lastStateDuration" />
+            <channel id="5-duration" typeId="duration" />
             <channel id="6" typeId="digitalOutput" >
                 <label>Digital Output 6</label></channel> 
             <channel id="6-timestamp" typeId="timestamp" />
-            <channel id="6-duration" typeId="lastStateDuration" />
+            <channel id="6-duration" typeId="duration" />
             <channel id="7" typeId="digitalOutput" >
                 <label>Digital Output 7</label></channel> 
             <channel id="7-timestamp" typeId="timestamp" />
-            <channel id="7-duration" typeId="lastStateDuration" />
+            <channel id="7-duration" typeId="duration" />
             <channel id="8" typeId="digitalOutput" >
                 <label>Digital Output 8</label></channel> 
             <channel id="8-timestamp" typeId="timestamp" />
-            <channel id="8-duration" typeId="lastStateDuration" />
+            <channel id="8-duration" typeId="duration" />
         </channels>
     </channel-group-type>
     
@@ -95,35 +95,35 @@
             <channel id="1" typeId="counter" >
             	<label>Counter 1</label></channel>           
             <channel id="1-timestamp" typeId="timestamp" />
-            <channel id="1-duration" typeId="lastStateDuration" />
+            <channel id="1-duration" typeId="duration" />
             <channel id="2" typeId="counter">
                 <label>Counter 2</label></channel>
             <channel id="2-timestamp" typeId="timestamp" />
-            <channel id="2-duration" typeId="lastStateDuration" />
+            <channel id="2-duration" typeId="duration" />
             <channel id="3" typeId="counter">
                 <label>Counter 3</label></channel>
             <channel id="3-timestamp" typeId="timestamp" />
-            <channel id="3-duration" typeId="lastStateDuration" />
+            <channel id="3-duration" typeId="duration" />
             <channel id="4" typeId="counter">
                 <label>Counter 4</label></channel>
             <channel id="4-timestamp" typeId="timestamp" />
-            <channel id="4-duration" typeId="lastStateDuration" />
+            <channel id="4-duration" typeId="duration" />
             <channel id="5" typeId="counter">
                 <label>Counter 5</label></channel>
             <channel id="5-timestamp" typeId="timestamp" />
-            <channel id="5-duration" typeId="lastStateDuration" />
+            <channel id="5-duration" typeId="duration" />
             <channel id="6" typeId="counter">
                  <label>Counter 6</label></channel>
             <channel id="6-timestamp" typeId="timestamp" />
-            <channel id="6-duration" typeId="lastStateDuration" />
+            <channel id="6-duration" typeId="duration" />
             <channel id="7" typeId="counter">
                 <label>Counter 7</label></channel>
             <channel id="7-timestamp" typeId="timestamp" />
-            <channel id="7-duration" typeId="lastStateDuration" />
+            <channel id="7-duration" typeId="duration" />
             <channel id="8" typeId="counter">
                 <label>Counter 8</label></channel>
             <channel id="8-timestamp" typeId="timestamp" />
-            <channel id="8-duration" typeId="lastStateDuration" />
+            <channel id="8-duration" typeId="duration" />
         </channels>
     </channel-group-type>
     
@@ -133,19 +133,19 @@
             <channel id="1" typeId="analogInput" >
                 <label>Analog Input 1</label></channel> 
             <channel id="1-timestamp" typeId="timestamp" />
-            <channel id="1-duration" typeId="lastStateDuration" />
+            <channel id="1-duration" typeId="duration" />
             <channel id="2" typeId="analogInput" >
                 <label>Analog Input 2</label></channel> 
             <channel id="2-timestamp" typeId="timestamp" />
-            <channel id="2-duration" typeId="lastStateDuration" />
+            <channel id="2-duration" typeId="duration" />
             <channel id="3" typeId="analogInput" >
                 <label>Analog Input 3</label></channel> 
             <channel id="3-timestamp" typeId="timestamp" />
-            <channel id="3-duration" typeId="lastStateDuration" />
+            <channel id="3-duration" typeId="duration" />
             <channel id="4" typeId="analogInput" >
                 <label>Analog Input 4</label></channel> 
             <channel id="4-timestamp" typeId="timestamp" />
-            <channel id="4-duration" typeId="lastStateDuration" />
+            <channel id="4-duration" typeId="duration" />
         </channels>
     </channel-group-type>
     
@@ -211,7 +211,7 @@
         <state readOnly="true" />
     </channel-type>
     
-    <channel-type id="lastStateDuration" advanced="true">
+    <channel-type id="duration" advanced="true">
         <item-type>Number:Time</item-type>
         <label>Previous State Duration</label>
         <description>Duration of previous state before state change.</description>
