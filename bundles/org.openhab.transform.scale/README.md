@@ -35,7 +35,7 @@ Scale transform is designed to work with numeric or quantity states. When the va
 `NaN=Non Numeric State presented`
 
 ### Formatting output
-At last, Scale transform takes care of formatting an output with this entry :
+At last, Scale transform can take care of formatting an output with this entry :
 
 `format=%label% (%value%) !`
 
